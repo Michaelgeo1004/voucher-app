@@ -8,7 +8,7 @@ const dbConfig = {
   options: {
     encrypt: false,
     enableArithAbort: true,
-  },
+  }
 };
 
 const pool = new sql.ConnectionPool(dbConfig);
