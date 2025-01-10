@@ -3,14 +3,17 @@ const session = require("express-session");
 const bodyParser = require("body-parser");
 const authRoutes = require("../voucher-app/routes/auth.routes");
 const dashboardRoutes = require("../voucher-app/routes/dashboard.routes");
+const voucherRoutes = require("../voucher-app/routes/voucher.routes");
 const db = require("../voucher-app/config/database");
 
 const app = express();
 
 // Set up the view engine
 app.set("view engine", "ejs");
+
+// Middleware to parse request body
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static("public"));
+app.use(bodyParser.json());
 
 //Session Setup
 app.use(
@@ -23,6 +26,7 @@ app.use(
 
 app.use(authRoutes);
 app.use(dashboardRoutes);
+app.use('/voucher',voucherRoutes);
 
 //start server
 app.listen(3000, () => {

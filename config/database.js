@@ -12,9 +12,12 @@ const dbConfig = {
   },
 };
 
-const pool = new sql.ConnectionPool(dbConfig)
+const poolPromise = new sql.ConnectionPool(dbConfig)
   .connect()
-  .then(() => console.log("Connected to Sql Server Express"))
+  .then((pool) => {
+    console.log("Connected to Sql Server Express");
+    return pool;
+  })
   .catch((err) => console.error("Error while connecting Server: ", err));
 
-module.exports = pool;
+module.exports = poolPromise;

@@ -2,10 +2,44 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Dashboard</title>
+        <link rel="stylesheet" href="../public/css/styles.css">
     </head>
     <body>
-        <h1>Welcome</h1>
+        <h1>Voucher Dashboard</h1>
+            <form action="/generate-voucher" method="post">
+                <button type="submit">Generate Voucher</button>
+            </form>
+
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Voucher Number</th>
+                    <th>Generated Date</th>
+                    <th>Expiry Date</th>
+                    <th>QR Code</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if(vouchers.length>0){ %>
+                    <% vouchers.forEach(voucher => { %>
+                        <tr>
+                            <td><%= voucher.id %></td>
+                            <td><%= voucher.voc_number %></td>
+                            <td><%= voucher.voc_generated_date %></td>
+                            <td><%= voucher.voc_expiry_date %></td>
+                            <td><img src="<%= voucher.voc_qr_code %>" alt="QR Code" width="100"></td>
+                        </tr>
+                   <% }) %>
+                   <% } else { %>
+                    <tr>
+                        <td colspan="5"> No Vouchers Found..!</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
         <a href="/logout">Logout</a>
     </body>
 </html>
