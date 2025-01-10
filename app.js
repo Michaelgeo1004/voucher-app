@@ -3,6 +3,7 @@ const session = require("express-session");
 const bodyParser = require("body-parser");
 const authRoutes = require("../voucher-app/routes/auth.routes");
 const dashboardRoutes = require("../voucher-app/routes/dashboard.routes");
+const db = require("../voucher-app/config/database");
 
 const app = express();
 

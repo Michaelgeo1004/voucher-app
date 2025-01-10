@@ -8,7 +8,7 @@ const Vouchermodel = {
       return allVouchers.recordsets;
     } catch (error) {
       console.error("Error fetching Vouchers:", error);
-      throw errro;
+      throw error;
     }
   },
 
