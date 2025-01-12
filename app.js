@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const authRoutes = require("../voucher-app/routes/auth.routes");
 const dashboardRoutes = require("../voucher-app/routes/dashboard.routes");
 const voucherRoutes = require("../voucher-app/routes/voucher.routes");
-const db = require("../voucher-app/config/database");
+const settingRoutes = require("../voucher-app/routes/settings.routes");
 
 const app = express();
 
@@ -24,9 +24,12 @@ app.use(
   })
 );
 
+app.use(express.static('public'))
+
 app.use(authRoutes);
 app.use(dashboardRoutes);
 app.use(voucherRoutes);
+app.use(settingRoutes);
 
 //start server
 app.listen(3000, () => {

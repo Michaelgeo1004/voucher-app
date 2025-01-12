@@ -9,6 +9,18 @@ const VoucherController = {
   async generateVoucher(req, res) {
     try {
       const pool = await db;
+
+      const settingsResult = await pool
+        .request()
+        .query(`SELECT voc_max_expiry_time FROM settings WHERE id = 1`);
+      const settings = settingsResult.recordset[0];
+
+      if (!settings) {
+        return res.status(404).send("Settings not found.");
+      }
+
+      const maxExpiryTime = settings.voc_max_expiry_time || 30; // Default to 30 Days if not found
+
       const voucherNumber =
         req.body.voucher_number ||
         Math.floor(1000000000 + Math.random() * 9000000000).toString();
@@ -23,7 +35,7 @@ const VoucherController = {
       const vocExpiryDate = req.body.voc_expiry_date
         ? new Date(req.body.voc_expiry_date)
         : new Date(vocGeneratedDate);
-      vocExpiryDate.setDate(vocGeneratedDate.getDate() + 30);
+      vocExpiryDate.setDate(vocGeneratedDate.getDate() + maxExpiryTime);
 
       await pool
         .request()
@@ -78,6 +90,18 @@ const VoucherController = {
       }
 
       const voucher = result.recordset[0];
+
+      const settingsResult = await pool
+        .request()
+        .query(`SELECT voc_width, voc_height, voc_title, voc_text FROM settings WHERE id = 1`);
+      const settings = settingsResult.recordset[0];
+
+      if (!settings) {
+        return res.status(404).send("Settings not found.");
+      }
+
+      const { voc_width, voc_height, voc_title, voc_text } = settings;
+
       const pdfPath = `public/pdfs/voucher_${voucher.voc_number}.pdf`;
 
       const doc = new PDFDocument();
@@ -89,12 +113,18 @@ const VoucherController = {
       const height = doc.page.height - margin * 2;
       doc.rect(margin, margin, width, height).stroke();
 
-      doc.fontSize(20)
-      .moveDown(1)
-      .text("Voucher Details", { align: "center" }).moveDown(1);
+      doc
+        .fontSize(voc_title || 20)
+        .moveDown(1)
+        .text("Voucher Details", {
+          align: "center",
+          underline: true,
+          lineGap: 10,
+        })
+        .moveDown(1);
 
       doc
-        .fontSize(14)
+        .fontSize(voc_text || 14)
         .text(`Voucher Number : ${voucher.voc_number}`, { align: "center" })
         .moveDown()
         .text(
@@ -115,10 +145,10 @@ const VoucherController = {
       const qrCode = Buffer.from(voucher.voc_qr_code.split(",")[1], "base64");
 
       doc.image(qrCode, {
-        fit: [250, 250],
+        fit: [voc_height || 250, voc_width || 250],
         align: "center",
-        x: (doc.page.width - 250) / 2,
-        y: (doc.page.height - 350) / 2
+        x: (doc.page.width - voc_height|| 250) / 2,
+        y: (doc.page.height - 350) / 2,
       });
 
       doc.end();

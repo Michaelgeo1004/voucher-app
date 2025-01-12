@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width = device-width , initial-scale=1.0">
+    <title>Voucher Settings</title>
+    </head>
+
+    <body>
+        <div class="container">
+            <h1 class="text-center">Voucher Settings</h1>
+            <form action="/update-settings" method="post">
+                <div class="mb-3">
+                    <label for="vocMaxExpiryTime" class="form-label">Max Expiry Time (Days): </label>
+                    <input type="number" class="form-control" name="vocMaxExpiryTime" value="<%= setting.voc_max_expiry_time %>" required>
+                </div>
+                <br>
+                <div class="mb-3">
+                    <label for="vocWidth" class="form-label">Voucher Width (mm):</label>
+                    <input type="number" class="form-control" name="vocWidth" value="<%= setting.voc_width %>" required>
+                </div>
+                <br>
+                <div class="mb-3">
+                    <label for="vocHeight" class="form-label">Voucher Height (mm):</label>
+                    <input type="number" class="form-control" name="vocHeight" value="<%= setting.voc_height %>" required>
+                </div>
+                <br>
+                <div class="mb-3">
+                    <label for="vocTitle" class="form-label">Voucher Font Size (Title):</label>
+                    <input type="number" class="form-control" name="vocTitle" value="<%= setting.voc_title %>" required>
+                </div>
+                <br>
+                <div class="mb-3">
+                    <label for="vocText" class="form-label">Voucher Text Size (Text):</label>
+                    <input type="number" class="form-control" name="vocText" value="<%= setting.voc_text %>" required>
+                </div>
+                <br>
+                <button type="submit" class="btn btn-primary">Update Settings</button>
+            </form>
+            <a href="/dashboard" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+    </body>
+</html>
