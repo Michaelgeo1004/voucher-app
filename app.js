@@ -26,7 +26,7 @@ app.use(
 
 app.use(authRoutes);
 app.use(dashboardRoutes);
-app.use('/voucher',voucherRoutes);
+app.use(voucherRoutes);
 
 //start server
 app.listen(3000, () => {

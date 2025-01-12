@@ -20,10 +20,11 @@
                     <th>Generated Date</th>
                     <th>Expiry Date</th>
                     <th>QR Code</th>
+                    <th>Download</th>
                 </tr>
             </thead>
             <tbody>
-                <% if(vouchers.length>0){ %>
+                <% if(vouchers && vouchers.length > 0){ %>
                     <% vouchers.forEach(voucher => { %>
                         <tr>
                             <td><%= voucher.id %></td>
@@ -31,6 +32,7 @@
                             <td><%= voucher.voc_generated_date %></td>
                             <td><%= voucher.voc_expiry_date %></td>
                             <td><img src="<%= voucher.voc_qr_code %>" alt="QR Code" width="100"></td>
+                            <td><a href="/generate-pdf/<%= voucher.voc_number %>" class="btn btn-primary">Download PDF</a></td>
                         </tr>
                    <% }) %>
                    <% } else { %>
@@ -40,6 +42,7 @@
                 <% } %>
             </tbody>
         </table>
+
         <a href="/logout">Logout</a>
     </body>
 </html>
