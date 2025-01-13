@@ -8,7 +8,7 @@ router.get("/", (req, res) => {
 });
 
 router.get("/login", (req, res) => {
-  res.render("login");
+  res.render("login",{ alert: null });
 });
 
 // Handle login form submission

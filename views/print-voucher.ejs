@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voucher Print</title>
+    <link rel="stylesheet" href="/css/print-voucher.css">
+
+</head>
+<body>
+    <div class="voucher-container">
+        <div class="voucher-header">
+            <h2>Voucher Details</h2>
+        </div>
+        <div class="voucher-info">
+            <p><strong>Voucher Number:</strong> <%= voucher.voc_number %></p>
+            <p><strong>Generated Date:</strong> <%= voucher.voc_generated_date %></p>
+            <p><strong>Expiry Date:</strong> <%= voucher.voc_expiry_date %></p>
+        </div>
+        <div class="voucher-qr">
+            <img src="<%= voucher.voc_qr_code %>" alt="QR Code" width="<%= voucher.voc_width %>" height="<%= voucher.voc_height %>">
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            window.print();
+        };
+    </script>
+    
+</body>
+</html>

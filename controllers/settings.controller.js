@@ -10,7 +10,7 @@ const SettingController = {
 
       const setting = result.recordset[0];
       if (setting) {
-        res.render("settings", { setting });
+        res.render("settings", { setting, alert: null });
       } else {
         res.status(404).send("Settings not found.");
       }
@@ -66,7 +66,20 @@ const SettingController = {
             voc_text = @vocText, 
             updated_at = GETDATE() 
             WHERE id = 1 `);
-      res.redirect("/settings");
+
+      const alert = {
+        type: "success",
+        title: "Settings Updated",
+        text: "Your settings have been updated successfully!",
+      };
+
+      const result = await pool
+        .request()
+        .query(`SELECT * FROM settings WHERE id = 1`);
+
+      const setting = result.recordset[0];
+      res.render("settings", { setting, alert });
+      
     } catch (error) {
       console.log("Error while Update Setting..! :", error);
       throw error;

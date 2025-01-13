@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width = device-width , initial-scale=1.0">
     <title>Voucher Settings</title>
+    <link rel="stylesheet" href="/css/setting.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     </head>
 
     <body>
@@ -37,6 +39,18 @@
                 <br>
                 <button type="submit" class="btn btn-primary">Update Settings</button>
             </form>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+        <% if(alert) { %>
+            <script>
+                Swal.fire({
+                    icon:`<%= alert.type %>`,
+                    title:`<%= alert.title %>`,
+                    text:`<%= alert.text %>`
+                })
+            </script>
+            <% } %>
+
             <a href="/dashboard" class="btn btn-secondary">Back to Dashboard</a>
         </div>
     </body>

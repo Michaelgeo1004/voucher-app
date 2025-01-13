@@ -25,8 +25,6 @@ const VoucherController = {
         req.body.voucher_number ||
         Math.floor(1000000000 + Math.random() * 9000000000).toString();
 
-      const qrCodeData = await qrcode.toDataURL(voucherNumber);
-
       const currentDate = new Date();
       const vocGeneratedDate = req.body.voc_generated_date
         ? new Date(req.body.voc_generated_date)
@@ -36,6 +34,14 @@ const VoucherController = {
         ? new Date(req.body.voc_expiry_date)
         : new Date(vocGeneratedDate);
       vocExpiryDate.setDate(vocGeneratedDate.getDate() + maxExpiryTime);
+
+      const qrCodeData = await qrcode.toDataURL(
+        JSON.stringify({
+          voucherNumber: voucherNumber,
+          vocGeneratedDate: moment(vocGeneratedDate).format("ddd MMM DD YYYY"),
+          vocExpiryDate: moment(vocExpiryDate).format("ddd MMM DD YYYY"),
+        })
+      );
 
       await pool
         .request()
@@ -50,7 +56,11 @@ const VoucherController = {
       const vouchers = await VoucherController.getAllVouchers();
       res.render("dashboard", {
         vouchers: vouchers,
-        message: "Voucher Generated Sucessfully..!",
+        alert: {
+          type: "success",
+          title: "Voucher Generated.",
+          text: "Voucher Generated Sucessfully..!",
+        },
       });
     } catch (error) {
       console.error("Error generating voucher: ", error);
@@ -93,7 +103,9 @@ const VoucherController = {
 
       const settingsResult = await pool
         .request()
-        .query(`SELECT voc_width, voc_height, voc_title, voc_text FROM settings WHERE id = 1`);
+        .query(
+          `SELECT voc_width, voc_height, voc_title, voc_text FROM settings WHERE id = 1`
+        );
       const settings = settingsResult.recordset[0];
 
       if (!settings) {
@@ -147,8 +159,8 @@ const VoucherController = {
       doc.image(qrCode, {
         fit: [voc_height || 250, voc_width || 250],
         align: "center",
-        x: (doc.page.width - voc_height|| 250) / 2,
-        y: (doc.page.height - 350) / 2,
+        x: (doc.page.width - (voc_width || 250)) / 2,
+        y: (doc.page.height - (voc_height || 250)) / 2,
       });
 
       doc.end();
@@ -163,6 +175,38 @@ const VoucherController = {
     } catch (error) {
       console.error("Error while generating PDF...! ", error);
       res.status(500).send("Error Generating PDF");
+    }
+  },
+
+  async printVoucher(req, res) {
+    try {
+      const voucherNumber = req.params.voucherNumber;
+      const pool = await db;
+      const result = await pool
+        .request()
+        .input("voucher_number", voucherNumber)
+        .query("SELECT * FROM vouchers WHERE voc_number = @voucher_number");
+
+      if (!result.recordset) {
+        return res.status(404).send("Voucher not Found..!");
+      }
+
+      const voucher = result.recordset[0];
+
+      res.render("print-voucher", {
+        voucher: {
+          ...voucher,
+          voc_generated_date: `${moment(voucher.voc_generated_date).format(
+            "ddd MMM DD YYYY"
+          )}`,
+          voc_expiry_date: `${moment(voucher.voc_expiry_date).format(
+            "ddd MMM DD YYYY"
+          )}`,
+        },
+      });
+    } catch (error) {
+      console.error("Error printing voucher:", error);
+      res.status(500).send("Error Printing Voucher");
     }
   },
 };

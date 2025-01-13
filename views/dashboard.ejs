@@ -4,14 +4,20 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Dashboard</title>
-        <link rel="stylesheet" href="../public/css/styles.css">
+        <link rel="stylesheet" href="/css/dashboard.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
     </head>
     <body>
         <h1>Voucher Dashboard</h1>
             <form action="/generate-voucher" method="post">
                 <button type="submit">Generate Voucher</button>
             </form>
-            <a href="/settings" class="btn btn-secondary">Go to Settings</a>
+
+            <div class="button-container">
+            <a href="/settings?alert=success" class="btn btn-secondary">Go to Settings</a>
+            <a href="/logout" >Logout</a>
+            </div>
             
         <table border="1">
             <thead>
@@ -22,6 +28,7 @@
                     <th>Expiry Date</th>
                     <th>QR Code</th>
                     <th>Export Voucher</th>
+                    <th>Print</th>
                 </tr>
             </thead>
             <tbody>
@@ -33,17 +40,28 @@
                             <td><%= voucher.voc_generated_date %></td>
                             <td><%= voucher.voc_expiry_date %></td>
                             <td><img src="<%= voucher.voc_qr_code %>" alt="QR Code" width="100"></td>
-                            <td><a href="/generate-pdf/<%= voucher.voc_number %>" class="btn btn-primary">Download PDF</a></td>
+                            <td><a href="/generate-pdf/<%= voucher.voc_number %>" class="pdf-button">Export PDF</a></td>
+                            <td><a href="/print-voucher/<%= voucher.voc_number %>" class="btn btn-primary">Print Voucher</a></td>
                         </tr>
                    <% }) %>
                    <% } else { %>
                     <tr>
-                        <td colspan="5"> No Vouchers Found..!</td>
+                        <td colspan="7"> No Vouchers Found..!</td>
                     </tr>
                 <% } %>
             </tbody>
         </table>
 
-        <a href="/logout">Logout</a>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+        <% if(alert) { %>
+            <script>
+                Swal.fire({
+                    icon:`<%= alert.type %>`,
+                    title:`<%= alert.title %>`,
+                    text:`<%= alert.text %>`
+                })
+            </script>
+            <% } %>
     </body>
 </html>
