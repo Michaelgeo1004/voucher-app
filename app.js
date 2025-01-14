@@ -1,10 +1,10 @@
 const express = require("express");
 const session = require("express-session");
 const bodyParser = require("body-parser");
-const authRoutes = require("../voucher-app/routes/auth.routes");
-const dashboardRoutes = require("../voucher-app/routes/dashboard.routes");
-const voucherRoutes = require("../voucher-app/routes/voucher.routes");
-const settingRoutes = require("../voucher-app/routes/settings.routes");
+const authRoutes = require("./routes/auth.routes");
+const dashboardRoutes = require("./routes/dashboard.routes");
+const voucherRoutes = require("./routes/voucher.routes");
+const settingRoutes = require("./routes/settings.routes");
 
 const app = express();
 
