@@ -5,6 +5,7 @@ const authRoutes = require("./routes/auth.routes");
 const dashboardRoutes = require("./routes/dashboard.routes");
 const voucherRoutes = require("./routes/voucher.routes");
 const settingRoutes = require("./routes/settings.routes");
+require('dotenv').config();
 
 const app = express();
 
@@ -18,9 +19,12 @@ app.use(bodyParser.json());
 //Session Setup
 app.use(
   session({
-    secret: "secret-key",
+    secret: process.env.SECRET_KEY,
     resave: false,
     saveUninitialized: true,
+    cookie:{
+      maxAge: 30 * 60 * 1000, // 30 minutes in milliseconds
+    }
   })
 );
 
